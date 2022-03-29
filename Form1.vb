@@ -8,6 +8,10 @@ Public Class Biseccion
     Dim ec As Single
     Dim i As Integer
     Dim redon As Integer
+    Dim g As Graphics
+    Dim j As Single
+    Dim a1 As Single
+    Dim b1 As Single
     Function f(x As Single) As Single
         Dim parser As ExpressionParser
         parser = New ExpressionParser
@@ -21,11 +25,20 @@ Public Class Biseccion
     Private Sub Calcular_Click(sender As Object, e As EventArgs) Handles Calcular.Click
         a = ta.Text
         b = tb.Text
+        a1 = a - 1
+        b1 = b + 1
         c = tc.Text
         ec = 0.5 * 10 ^ (-c)
         redon = c + 2
+        i = 0
         x(i) = (a + b) / 2
         err(i) = 1
+        If f(x(i)) = 0 Then
+            err(i) = 0
+        End If
+        Salida.Rows.Add(i, Math.Round(a, redon), Math.Round(x(i), redon),
+            Math.Round(b, redon),
+            Math.Round(f(a), redon), Math.Round(f(x(i)), redon), Math.Round(f(b), redon), "-----")
         Do While err(i) > ec
             If f(a) * f(x(i)) < 0 Then
                 b = x(i)
@@ -35,8 +48,9 @@ Public Class Biseccion
             i = i + 1
             x(i) = (a + b) / 2
             err(i) = Math.Abs((x(i) - x(i - 1)) / x(i))
-            Salida.Rows.Add(i, Math.Round(a, redon), Math.Round(x(i), redon), Math.Round(b, redon),
-Math.Round(f(a), redon), Math.Round(f(x(i)), redon), Math.Round(f(b), redon), Math.Round(err(i), redon))
+            Salida.Rows.Add(i, Math.Round(a, redon), Math.Round(x(i), redon),
+            Math.Round(b, redon),
+            Math.Round(f(a), redon), Math.Round(f(x(i)), redon), Math.Round(f(b), redon), Math.Round(err(i), redon))
         Loop
         tr.Text = Math.Round(x(i), redon)
     End Sub
@@ -50,7 +64,26 @@ Math.Round(f(a), redon), Math.Round(f(x(i)), redon), Math.Round(f(b), redon), Ma
         Salida.Rows.Clear()
     End Sub
 
-    Private Sub tr_Click(sender As Object, e As EventArgs) Handles tr.Click
+    Private Sub tr_Click(sender As Object, e As EventArgs) Handles lr.Click
+
+    End Sub
+
+    Private Sub Biseccion_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+    End Sub
+
+
+    Private Sub Graficar_Click(sender As Object, e As EventArgs) Handles Graficar.Click
+        g = Graf.CreateGraphics()
+        j = a1
+        Do While j <= b1
+            Graf.Series(0).Points.AddXY(Math.Round(j, 1), f(j))
+            j = j + 0.1
+        Loop
+        Graf.Series(1).Points.AddXY(Math.Round(x(i), 1), f(x(i)))
+    End Sub
+
+    Private Sub Graf_Click(sender As Object, e As EventArgs) Handles Graf.Click
 
     End Sub
 End Class
